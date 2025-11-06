@@ -12,3 +12,6 @@ def columns_names(df):
     )
     return df
 
+def date_type(df, column_name):
+    df[column_name] = pd.to_datetime(df[column_name], errors='coerce')
+    return df
