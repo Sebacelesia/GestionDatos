@@ -31,4 +31,12 @@ def rfm_features(df_hist: pd.DataFrame, fecha_ref: pd.Timestamp) -> pd.DataFrame
     )
     return rfm
 
+def safe_qcut(rfm: pd.DataFrame) -> pd.DataFrame:
 
+
+    rfm['R_Score'] = pd.qcut(rfm['Recency_Dias'], 5, labels=[5, 4, 3, 2, 1]).astype(int)
+    rfm['F_Score'] = pd.qcut(rfm['Frequency'], 5, labels=[1, 2, 3, 4, 5]).astype(int)
+    rfm['M_Score'] = pd.qcut(rfm['Monetary'], 5, labels=[1, 2, 3, 4, 5]).astype(int)
+    rfm['RFM_Score'] = rfm[['R_Score', 'F_Score', 'M_Score']].sum(axis=1)
+
+    return rfm

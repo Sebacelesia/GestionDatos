@@ -52,7 +52,7 @@ def ticket_stats_(df_hist:pd.DataFrame) -> pd.DataFrame:
         .reset_index()
         .rename(columns={'mean': 'Ticket_Promedio', 'std': 'Ticket_Desvio'})
     )
-    
+
     return ticket_stats
 
 def recent_purchases(df_hist: pd.DataFrame, fecha_ref: pd.Timestamp) -> pd.DataFrame:
@@ -70,3 +70,21 @@ def recent_purchases(df_hist: pd.DataFrame, fecha_ref: pd.Timestamp) -> pd.DataF
         .rename(columns={"ult30":"Compras_Ultimos30","ult90":"Compras_Ultimos90"})
     )
     return out
+
+
+
+
+
+def promedio_shipping_cost(df_hist: pd.DataFrame) -> pd.DataFrame:
+    """
+    Promedio del costo de envío por cliente (histórico hasta la fecha de corte).
+    Devuelve: [client_id, Promedio_Shipping_Cost]
+    """
+    prom_shipping = (
+        df_hist.groupby("client_id")["shipping_cost"]
+        .mean()
+        .reset_index(name="Promedio_Shipping_Cost")
+    )
+    return prom_shipping
+
+
