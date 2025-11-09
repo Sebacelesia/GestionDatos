@@ -10,14 +10,12 @@ def build_dataset():
     dfs = load_all()
     dforders, dfclients, dfprods = dfs["orders"], dfs["clients"], dfs["products"]
 
-    df_orders = columns_names(dforders)
+    dforders = columns_names(dforders)
     dfclients = columns_names(dfclients)
     dfprods = columns_names(dfprods)
 
     dforders = date_type(dforders, "order_timestamp")
-    
     dfclients = date_type(dfclients, "registration_date")
-    
     dfclients = date_type(dfclients, "last_seen")
     
     fecha_corte, fecha_ref= make_cutoffs(dforders)
@@ -54,6 +52,7 @@ def build_dataset():
 
     dataset = dataset.drop(columns=['first_name', 'last_name', 'email', 'address', 'postal_code','document_type','document_number','document_number',
          ], errors='ignore')
+         
     return dataset
     
 
