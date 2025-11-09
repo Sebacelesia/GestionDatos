@@ -4,7 +4,7 @@ from src.extract_transf.load import load_all
 from src.extract_transf.clean import columns_names, date_type
 from src.feature.rfm import make_cutoffs, split_hist_future, rfm_features, safe_qcut
 from src.feature.temporal import diff_time_stats, tenure_days, diver, stats, ticket_stats_,recent_purchases, promedio_shipping_cost
-from src.feature.churn import make_churn   
+from src.feature.churn import make_churn  
 
 def build_dataset():
     dfs = load_all()
@@ -15,9 +15,11 @@ def build_dataset():
     dfprods = columns_names(dfprods)
 
     dforders = date_type(dforders, "order_timestamp")
+    
     dfclients = date_type(dfclients, "registration_date")
-    dfprods = date_type(dfprods, "last_seen")
-
+    
+    dfclients = date_type(dfclients, "last_seen")
+    
     fecha_corte, fecha_ref= make_cutoffs(dforders)
     df_hist, df_futuro = split_hist_future(dforders,fecha_corte)
 
@@ -28,7 +30,7 @@ def build_dataset():
     diversidad = diver(df_hist)
     moda_categoria, moda_payment, moda_shipping = stats(df_hist)
     ticket_stats = ticket_stats_(df_hist)
-    compras_recientes = recent_purchases(df_hist)
+    compras_recientes = recent_purchases(df_hist,fecha_ref)
     prom_shipping = promedio_shipping_cost(df_hist)
 
     rfm = safe_qcut(rfm)
@@ -55,3 +57,5 @@ def build_dataset():
     return dataset
     
 
+dataset = build_dataset()
+print(dataset.head())
