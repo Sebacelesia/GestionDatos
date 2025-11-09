@@ -50,7 +50,7 @@ def build_dataset():
     .merge(df_churn[['client_id', 'churn']], on='client_id', how='left')
     )
 
-    dataset = dataset.drop(columns=['first_name', "client_id"'last_name', 'email', 'address', 'postal_code','document_type','document_number','document_number',
+    dataset = dataset.drop(columns=['first_name', "client_id",'last_name', 'email', 'address', 'postal_code','document_type','document_number','document_number',
          ], errors='ignore')
 
     return dataset
