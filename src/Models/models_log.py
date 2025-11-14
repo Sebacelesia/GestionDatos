@@ -3,7 +3,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
-
+import os
 import mlflow
 import mlflow.sklearn
 from sklearn.metrics import (
@@ -122,6 +122,7 @@ def entrenar_y_loggear_modelo(nombre_modelo, pipeline, X_train, X_test, y_train,
     Entrena un pipeline, calcula métricas y las loggea en MLflow.
     Devuelve un diccionario con las métricas.
     """
+    
     with mlflow.start_run(run_name=nombre_modelo):
         pipeline.fit(X_train, y_train)
 
