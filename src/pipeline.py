@@ -1,10 +1,15 @@
 import pandas as pd
+from pathlib import Path
+import mlflow
 
 from src.extract_transf.load import load_all
 from src.extract_transf.clean import columns_names, date_type
 from src.feature.rfm import make_cutoffs, split_hist_future, rfm_features, safe_qcut
 from src.feature.temporal import diff_time_stats, tenure_days, diver, stats, ticket_stats_,recent_purchases, promedio_shipping_cost
 from src.feature.churn import make_churn  
+from src.Models.train_test import preprocess, hacer_train_test_split
+from src.Models.models_log import build_models, correr_todos_los_modelos
+
 
 def build_dataset():
     dfs = load_all()
@@ -54,5 +59,29 @@ def build_dataset():
          ], errors='ignore')
 
     return dataset
-    
+def build_mlruns():
+    project_root = Path(__file__).resolve().parent.parent
 
+    tracking_dir = (project_root / "mlruns").resolve()
+    tracking_uri = tracking_dir.as_uri()
+
+    mlflow.set_tracking_uri(tracking_uri)
+    mlflow.set_experiment("churn")
+
+def main():
+    dataset = build_dataset()
+    X, y = preprocess(dataset)
+    
+    X_train, X_test, y_train, y_test = hacer_train_test_split(X, y)
+    
+    models = build_models(y_train)
+    build_mlruns()
+    resultados_df = correr_todos_los_modelos(
+        models,
+        X_train, X_test,
+        y_train, y_test
+    )
+    print(resultados_df)
+
+if __name__ == "__main__":
+     main()
