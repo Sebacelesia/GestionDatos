@@ -1,5 +1,10 @@
 from sklearn.model_selection import train_test_split
 
+def preprocess(dataset):
+    X = dataset.drop(columns=["churn","registration_date","last_seen"])
+    y = dataset["churn"]
+    return X, y
+
 def hacer_train_test_split(X, y, test_size=0.2, random_state=42, stratify=True):
     """
     Devuelve X_train, X_test, y_train, y_test.
