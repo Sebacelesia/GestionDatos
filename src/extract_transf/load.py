@@ -19,8 +19,21 @@ def read_products(path: PathLike = DEFAULT_DATA_DIR / "dfproductos.csv", **kwarg
 
 def load_all(base_dir: PathLike = DEFAULT_DATA_DIR) -> Dict[str, pd.DataFrame]:
     base = Path(base_dir)
-    return {
-        "orders":   read_orders(base / "dforders.csv"),
-        "clients":  read_clients(base / "dfclientes.csv"),
-        "products": read_products(base / "dfproductos.csv"),
-    }
+
+    try:
+        dforders = read_orders(base / "dforders.csv")
+        dfclients = read_clients(base / "dfclientes.csv")
+        dfprods  = read_products(base / "dfproductos.csv")
+
+        return {
+            "orders":   dforders,
+            "clients":  dfclients,
+            "products": dfprods,
+        }
+
+    except FileNotFoundError as e:
+        print(f"[ERROR] No se encontró alguno de los archivos CSV en '{base}': {e}")
+        raise
+    except Exception as e:
+        print(f"[ERROR] Ocurrió un problema al cargar los datos desde '{base}': {e}")
+        raise
